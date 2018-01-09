@@ -18,9 +18,6 @@ namespace kyokuFind
 {
     public partial class frmMain : Form
     {
-        //last.fm credentials
-        string API_KEY = "2ab7e17c49bbe3e59f66db73280986d2";
-        string API_SECRET = "a9ba844cbf9639fd7563ea2075053642";
         //operators for special query
         string OP_ARTIST = "!songsby";
         string OP_ALBUM = "!songsin";
@@ -46,7 +43,7 @@ namespace kyokuFind
         {
             console = new Console(this.txtConsole);
             lucene = new LuceneService(console);
-            session = new Session(API_KEY, API_SECRET);
+            session = new Session(CONFIG.LASTFM_API_KEY, CONFIG.LASTFM_API_SECRET);
         }
 
         //to process hotkeys

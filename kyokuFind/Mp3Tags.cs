@@ -14,7 +14,7 @@ namespace kyokuFind
     /// </summary>
     static class Mp3Tags
     {
-        public static string musicPath = @"D:\music";
+        public static string musicPath = @"D:\music\Humming Urban Stereo";
         public static IEnumerable<Result> CollectTags()
         {
             UltraID3 u = new UltraID3();

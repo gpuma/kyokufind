@@ -16,7 +16,6 @@ namespace kyokuFind
     class LuceneService
     {
         private IndexWriter writer;
-        private static string indexPath = @"d:\kyokuIndex";
         private Directory luceneIndexDirectory;
         private Analyzer analyzer = new StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_30);
         private Console console;
@@ -35,20 +34,20 @@ namespace kyokuFind
 
         public LuceneService(Console console)
         {
-            luceneIndexDirectory = FSDirectory.Open(indexPath);
+            luceneIndexDirectory = FSDirectory.Open(CONFIG.LUCENE_INDEX_PATH);
             this.console = console;
         }
 
         //prepares index for building and calls BuildIndex(), overwrite is on!
         public void RebuildIndex()
         {
-            if (System.IO.Directory.Exists(indexPath))
+            if (System.IO.Directory.Exists(CONFIG.LUCENE_INDEX_PATH))
             {
                 console.Log("deleting index folder...");
-                System.IO.Directory.Delete(indexPath, true);
+                System.IO.Directory.Delete(CONFIG.LUCENE_INDEX_PATH, true);
             }
 
-            luceneIndexDirectory = FSDirectory.Open(indexPath);
+            luceneIndexDirectory = FSDirectory.Open(CONFIG.LUCENE_INDEX_PATH);
             writer = new IndexWriter(luceneIndexDirectory, analyzer, true, IndexWriter.MaxFieldLength.LIMITED);
             console.Log("rebuilding index...");
             BuildIndex(Mp3Tags.CollectTags());
