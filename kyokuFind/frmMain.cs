@@ -221,5 +221,16 @@ namespace kyokuFind
                 return;
             System.Diagnostics.Process.Start(URL);
         }
+
+        private void btnSelectMusicFolder_Click(object sender, EventArgs e)
+        {
+            var dlgResult = folderBrowserDialog.ShowDialog();
+            if(dlgResult == DialogResult.Cancel)
+            {
+                return;
+            }
+            Mp3Tags.musicPath = lblMusicPath.Text = folderBrowserDialog.SelectedPath;
+            lucene.RebuildIndex();
+        }
     }
 }

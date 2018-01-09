@@ -40,13 +40,16 @@
             this.lblGenres = new System.Windows.Forms.Label();
             this.lstSongs = new System.Windows.Forms.ListBox();
             this.txtConsole = new System.Windows.Forms.RichTextBox();
+            this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.btnSelectMusicFolder = new System.Windows.Forms.Button();
+            this.lblMusicPath = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblSearch
             // 
             this.lblSearch.AutoSize = true;
-            this.lblSearch.Location = new System.Drawing.Point(13, 13);
+            this.lblSearch.Location = new System.Drawing.Point(16, 45);
             this.lblSearch.Name = "lblSearch";
             this.lblSearch.Size = new System.Drawing.Size(39, 13);
             this.lblSearch.TabIndex = 0;
@@ -56,9 +59,9 @@
             // 
             this.txtSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtSearch.Location = new System.Drawing.Point(54, 10);
+            this.txtSearch.Location = new System.Drawing.Point(58, 42);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(815, 20);
+            this.txtSearch.Size = new System.Drawing.Size(747, 20);
             this.txtSearch.TabIndex = 1;
             this.txtSearch.TextChanged += new System.EventHandler(this.txtSearch_TextChanged);
             this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearch_KeyDown);
@@ -79,14 +82,14 @@
             this.tableLayoutPanel1.Controls.Add(this.lblAlbums, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.lblGenres, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.lstSongs, 0, 1);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(16, 36);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(16, 68);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 4;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(611, 436);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(543, 420);
             this.tableLayoutPanel1.TabIndex = 2;
             // 
             // lstGenres
@@ -95,9 +98,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lstGenres.FormattingEnabled = true;
-            this.lstGenres.Location = new System.Drawing.Point(308, 241);
+            this.lstGenres.Location = new System.Drawing.Point(274, 233);
             this.lstGenres.Name = "lstGenres";
-            this.lstGenres.Size = new System.Drawing.Size(300, 186);
+            this.lstGenres.Size = new System.Drawing.Size(266, 173);
             this.lstGenres.TabIndex = 6;
             // 
             // lstAlbums
@@ -106,9 +109,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lstAlbums.FormattingEnabled = true;
-            this.lstAlbums.Location = new System.Drawing.Point(3, 241);
+            this.lstAlbums.Location = new System.Drawing.Point(3, 233);
             this.lstAlbums.Name = "lstAlbums";
-            this.lstAlbums.Size = new System.Drawing.Size(299, 186);
+            this.lstAlbums.Size = new System.Drawing.Size(265, 173);
             this.lstAlbums.TabIndex = 5;
             // 
             // lstArtists
@@ -117,9 +120,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lstArtists.FormattingEnabled = true;
-            this.lstArtists.Location = new System.Drawing.Point(308, 23);
+            this.lstArtists.Location = new System.Drawing.Point(274, 23);
             this.lstArtists.Name = "lstArtists";
-            this.lstArtists.Size = new System.Drawing.Size(300, 186);
+            this.lstArtists.Size = new System.Drawing.Size(266, 173);
             this.lstArtists.TabIndex = 4;
             this.lstArtists.DoubleClick += new System.EventHandler(this.lstArtists_DoubleClick);
             // 
@@ -135,7 +138,7 @@
             // lblArtists
             // 
             this.lblArtists.AutoSize = true;
-            this.lblArtists.Location = new System.Drawing.Point(308, 0);
+            this.lblArtists.Location = new System.Drawing.Point(274, 0);
             this.lblArtists.Name = "lblArtists";
             this.lblArtists.Size = new System.Drawing.Size(35, 13);
             this.lblArtists.TabIndex = 0;
@@ -144,7 +147,7 @@
             // lblAlbums
             // 
             this.lblAlbums.AutoSize = true;
-            this.lblAlbums.Location = new System.Drawing.Point(3, 218);
+            this.lblAlbums.Location = new System.Drawing.Point(3, 210);
             this.lblAlbums.Name = "lblAlbums";
             this.lblAlbums.Size = new System.Drawing.Size(41, 13);
             this.lblAlbums.TabIndex = 1;
@@ -153,7 +156,7 @@
             // lblGenres
             // 
             this.lblGenres.AutoSize = true;
-            this.lblGenres.Location = new System.Drawing.Point(308, 218);
+            this.lblGenres.Location = new System.Drawing.Point(274, 210);
             this.lblGenres.Name = "lblGenres";
             this.lblGenres.Size = new System.Drawing.Size(41, 13);
             this.lblGenres.TabIndex = 2;
@@ -167,7 +170,7 @@
             this.lstSongs.FormattingEnabled = true;
             this.lstSongs.Location = new System.Drawing.Point(3, 23);
             this.lstSongs.Name = "lstSongs";
-            this.lstSongs.Size = new System.Drawing.Size(299, 186);
+            this.lstSongs.Size = new System.Drawing.Size(265, 173);
             this.lstSongs.TabIndex = 3;
             // 
             // txtConsole
@@ -176,18 +179,41 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtConsole.BackColor = System.Drawing.Color.Black;
             this.txtConsole.ForeColor = System.Drawing.Color.White;
-            this.txtConsole.Location = new System.Drawing.Point(634, 37);
+            this.txtConsole.Location = new System.Drawing.Point(566, 68);
             this.txtConsole.Name = "txtConsole";
             this.txtConsole.ReadOnly = true;
-            this.txtConsole.Size = new System.Drawing.Size(235, 435);
+            this.txtConsole.Size = new System.Drawing.Size(235, 420);
             this.txtConsole.TabIndex = 3;
             this.txtConsole.Text = "|";
+            // 
+            // btnSelectMusicFolder
+            // 
+            this.btnSelectMusicFolder.Location = new System.Drawing.Point(13, 13);
+            this.btnSelectMusicFolder.Name = "btnSelectMusicFolder";
+            this.btnSelectMusicFolder.Size = new System.Drawing.Size(113, 23);
+            this.btnSelectMusicFolder.TabIndex = 4;
+            this.btnSelectMusicFolder.Text = "Select Music Folder";
+            this.btnSelectMusicFolder.UseVisualStyleBackColor = true;
+            this.btnSelectMusicFolder.Click += new System.EventHandler(this.btnSelectMusicFolder_Click);
+            // 
+            // lblMusicPath
+            // 
+            this.lblMusicPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblMusicPath.AutoSize = true;
+            this.lblMusicPath.Location = new System.Drawing.Point(132, 18);
+            this.lblMusicPath.Name = "lblMusicPath";
+            this.lblMusicPath.Size = new System.Drawing.Size(93, 13);
+            this.lblMusicPath.TabIndex = 5;
+            this.lblMusicPath.Text = "No folder selected";
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(881, 484);
+            this.ClientSize = new System.Drawing.Size(813, 500);
+            this.Controls.Add(this.lblMusicPath);
+            this.Controls.Add(this.btnSelectMusicFolder);
             this.Controls.Add(this.txtConsole);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.txtSearch);
@@ -215,6 +241,9 @@
         private System.Windows.Forms.Label lblGenres;
         private System.Windows.Forms.ListBox lstSongs;
         private System.Windows.Forms.RichTextBox txtConsole;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
+        private System.Windows.Forms.Button btnSelectMusicFolder;
+        private System.Windows.Forms.Label lblMusicPath;
     }
 }
 
