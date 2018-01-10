@@ -166,7 +166,7 @@ namespace kyokuFind
         {
             lstSongs.DataSource = songs;
             lstSongs.DisplayMember = "DisplaySong";
-            lstGenres.ValueMember = "Filename";
+            lstSongs.ValueMember = "Filename";
 
             lstArtists.DataSource = artists;
             lstArtists.DisplayMember = "DisplayArtist";
@@ -270,6 +270,27 @@ namespace kyokuFind
             //after building the index we want to display all retrieved documents
             //the empty query is used for that
             Search("");
+        }
+
+        //void PlaySelectedAlbum()
+        //{
+        //    var filename = ((Result)lstAlbums.SelectedValue);
+        //}
+
+        void PlaySelectedSong()
+        {
+            var filename = (string)lstSongs.SelectedValue;
+            System.Diagnostics.Process.Start(filename);
+        }
+
+        private void lstSongs_DoubleClick(object sender, EventArgs e)
+        {
+            PlaySelectedSong();
+        }
+
+        private void lstAlbums_DoubleClick(object sender, EventArgs e)
+        {
+            //PlaySelectedAlbum();
         }
     }
 }

@@ -119,6 +119,7 @@
             this.lstAlbums.Name = "lstAlbums";
             this.lstAlbums.Size = new System.Drawing.Size(265, 173);
             this.lstAlbums.TabIndex = 5;
+            this.lstAlbums.DoubleClick += new System.EventHandler(this.lstAlbums_DoubleClick);
             // 
             // lstArtists
             // 
@@ -178,6 +179,7 @@
             this.lstSongs.Name = "lstSongs";
             this.lstSongs.Size = new System.Drawing.Size(265, 173);
             this.lstSongs.TabIndex = 3;
+            this.lstSongs.DoubleClick += new System.EventHandler(this.lstSongs_DoubleClick);
             // 
             // txtConsole
             // 
