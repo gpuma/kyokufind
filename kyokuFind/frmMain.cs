@@ -34,8 +34,22 @@ namespace kyokuFind
         private void SetUp()
         {
             console = new Console(this.txtConsole);
-            lucene = new LuceneService(console, this.bgWorker);
+            lucene = new LuceneService(console);
             session = new Session(CONFIG.LASTFM_API_KEY, CONFIG.LASTFM_API_SECRET);
+            if (lucene.IndexExists())
+            {
+                lblMusicPath.Visible = false;
+                progressBar.Visible = false;
+                lblStripStatus.Text = String.Format("Ready. Using index at {0}", CONFIG.LUCENE_INDEX_PATH);
+                txtSearch.Enabled = true;
+                Search("");
+            }
+            else
+            {
+                lblStripStatus.Text = "Please select a folder with mp3 files to start.";
+                progressBar.Visible = false;
+                txtSearch.Enabled = false;
+            }
         }
 
         //to process hotkeys

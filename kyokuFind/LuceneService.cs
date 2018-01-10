@@ -35,11 +35,19 @@ namespace kyokuFind
         public const string F_LENGTH = "length";
         public const string F_DOCTYPE = "doctype";
 
-        public LuceneService(Console console, System.ComponentModel.BackgroundWorker bgWorker)
+        public LuceneService(Console console)
         {
             luceneIndexDirectory = FSDirectory.Open(CONFIG.LUCENE_INDEX_PATH);
             this.console = console;
-            this.bgWorker = bgWorker;
+        }
+
+        /// <summary>
+        /// Returns true if the path specified by CONFIG.LUCENE_INDEX_PATH already
+        /// contains an index.
+        /// </summary>
+        public bool IndexExists()
+        {
+            return System.IO.Directory.Exists(CONFIG.LUCENE_INDEX_PATH);
         }
 
         //(re)builds index from a set of results, overwrite is on!
@@ -47,7 +55,7 @@ namespace kyokuFind
         public void BuildIndex(IEnumerable<Result> songs)
         {
             //rebuild index if it already exists
-            if (System.IO.Directory.Exists(CONFIG.LUCENE_INDEX_PATH))
+            if (IndexExists())
             {
                 Debug.WriteLine("deleting index folder...");
                 System.IO.Directory.Delete(CONFIG.LUCENE_INDEX_PATH, true);
