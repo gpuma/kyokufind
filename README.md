@@ -12,7 +12,7 @@ kyokuFind is a local music library application for Windows, written in C# using 
 
 #### Special queries
 - To get songs by artist(s): `!songsby artist1, artist2`
-![songsby example]({{site.baseurl}}/https://imgur.com/ICwXY7R.gif)
+![songsby operator example](https://imgur.com/ICwXY7R.gif)
 
 #### Other shortcuts
 
