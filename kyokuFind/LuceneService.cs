@@ -10,6 +10,7 @@ using Lucene.Net.Analysis.Standard;
 using Lucene.Net.QueryParsers;
 using Lucene.Net.Search;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 
 namespace kyokuFind
 {
@@ -19,6 +20,8 @@ namespace kyokuFind
         private Directory luceneIndexDirectory;
         private Analyzer analyzer = new StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_30);
         private Console console;
+        //used for reporting progress while indexing
+        private System.ComponentModel.BackgroundWorker bgWorker;
         public enum DocType { SONG, ARTIST, ALBUM, GENRE };
 
         //field constants
@@ -32,37 +35,36 @@ namespace kyokuFind
         public const string F_LENGTH = "length";
         public const string F_DOCTYPE = "doctype";
 
-        public LuceneService(Console console)
+        public LuceneService(Console console, System.ComponentModel.BackgroundWorker bgWorker)
         {
             luceneIndexDirectory = FSDirectory.Open(CONFIG.LUCENE_INDEX_PATH);
             this.console = console;
+            this.bgWorker = bgWorker;
         }
 
-        //prepares index for building and calls BuildIndex(), overwrite is on!
-        public void RebuildIndex()
-        {
-            if (System.IO.Directory.Exists(CONFIG.LUCENE_INDEX_PATH))
-            {
-                console.Log("deleting index folder...");
-                System.IO.Directory.Delete(CONFIG.LUCENE_INDEX_PATH, true);
-            }
-
-            luceneIndexDirectory = FSDirectory.Open(CONFIG.LUCENE_INDEX_PATH);
-            writer = new IndexWriter(luceneIndexDirectory, analyzer, true, IndexWriter.MaxFieldLength.LIMITED);
-            console.Log("rebuilding index...");
-            BuildIndex(Mp3Tags.CollectTags());
-        }
-
-        //builds index from a set of results
+        //(re)builds index from a set of results, overwrite is on!
         //FOUR TYPES of documents: songs, artists, albums and genres. field doctype used for distinction.
         public void BuildIndex(IEnumerable<Result> songs)
         {
+            //rebuild index if it already exists
+            if (System.IO.Directory.Exists(CONFIG.LUCENE_INDEX_PATH))
+            {
+                Debug.WriteLine("deleting index folder...");
+                System.IO.Directory.Delete(CONFIG.LUCENE_INDEX_PATH, true);
+            }
+            luceneIndexDirectory = FSDirectory.Open(CONFIG.LUCENE_INDEX_PATH);
+            writer = new IndexWriter(luceneIndexDirectory, analyzer, true, IndexWriter.MaxFieldLength.LIMITED);
+            Debug.WriteLine("rebuilding index...");
+
             //we use concurrent dictionarys tu support updating
             var dicArtists = new ConcurrentDictionary <string, int>();
             var dicAlbums = new ConcurrentDictionary <string, int>();
             var dicGenres = new ConcurrentDictionary <string, int>();
+            //number of documents processed
+            var timer = new System.Diagnostics.Stopwatch();
+            timer.Start();
+            Debug.WriteLine("adding songs...");
 
-            console.Log("adding songs...");
             //first set of documents: songs
             foreach (var song in songs)
             {
@@ -86,7 +88,7 @@ namespace kyokuFind
                 writer.AddDocument(doc);
             }
             //second set of documents: artists
-            console.Log("adding artists...");
+            Debug.WriteLine("adding artists...");
             foreach (var artist in dicArtists)
             {
                 var doc = new Document();
@@ -97,7 +99,7 @@ namespace kyokuFind
                 writer.AddDocument(doc);
             }
             //third set of documents: albums
-            console.Log("adding albums...");
+            Debug.WriteLine("adding albums...");
             foreach (var album in dicAlbums)
             {
                 var doc = new Document();
@@ -108,7 +110,7 @@ namespace kyokuFind
                 writer.AddDocument(doc);
             }
             //third set of documents: genres
-            console.Log("adding genres...");
+            Debug.WriteLine("adding genres...");
             foreach (var genre in dicGenres)
             {
                 var doc = new Document();
@@ -122,16 +124,18 @@ namespace kyokuFind
             writer.Optimize();
             writer.Flush(true, true, true);
             writer.Dispose();
-            console.Log("Index built succesfully...");
+            timer.Stop();
+
+            Debug.WriteLine("Index built succesfully!");
         }
 
         //searches the four types of objects and returns the results as four list parameters
         public void Search(string searchTerm, ref IEnumerable<Result> songs, ref IEnumerable<Result> artists,
             ref IEnumerable<Result> albums, ref IEnumerable<Result> genres)
         {
+            albums = Search(F_ALBUM, searchTerm);
             songs = Search(F_TITLE, searchTerm);
             artists = Search(F_ARTIST, searchTerm);
-            albums = Search(F_ALBUM, searchTerm);
             genres = Search(F_GENRE, searchTerm);
         }
 

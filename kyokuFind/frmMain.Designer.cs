@@ -43,7 +43,12 @@
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.btnSelectMusicFolder = new System.Windows.Forms.Button();
             this.lblMusicPath = new System.Windows.Forms.Label();
+            this.bgWorker = new System.ComponentModel.BackgroundWorker();
+            this.statusBar = new System.Windows.Forms.StatusStrip();
+            this.lblStripStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.progressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.tableLayoutPanel1.SuspendLayout();
+            this.statusBar.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblSearch
@@ -59,6 +64,7 @@
             // 
             this.txtSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtSearch.Enabled = false;
             this.txtSearch.Location = new System.Drawing.Point(58, 42);
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(747, 20);
@@ -89,7 +95,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(543, 420);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(543, 407);
             this.tableLayoutPanel1.TabIndex = 2;
             // 
             // lstGenres
@@ -98,7 +104,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lstGenres.FormattingEnabled = true;
-            this.lstGenres.Location = new System.Drawing.Point(274, 233);
+            this.lstGenres.Location = new System.Drawing.Point(274, 226);
             this.lstGenres.Name = "lstGenres";
             this.lstGenres.Size = new System.Drawing.Size(266, 173);
             this.lstGenres.TabIndex = 6;
@@ -109,7 +115,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lstAlbums.FormattingEnabled = true;
-            this.lstAlbums.Location = new System.Drawing.Point(3, 233);
+            this.lstAlbums.Location = new System.Drawing.Point(3, 226);
             this.lstAlbums.Name = "lstAlbums";
             this.lstAlbums.Size = new System.Drawing.Size(265, 173);
             this.lstAlbums.TabIndex = 5;
@@ -147,7 +153,7 @@
             // lblAlbums
             // 
             this.lblAlbums.AutoSize = true;
-            this.lblAlbums.Location = new System.Drawing.Point(3, 210);
+            this.lblAlbums.Location = new System.Drawing.Point(3, 203);
             this.lblAlbums.Name = "lblAlbums";
             this.lblAlbums.Size = new System.Drawing.Size(41, 13);
             this.lblAlbums.TabIndex = 1;
@@ -156,7 +162,7 @@
             // lblGenres
             // 
             this.lblGenres.AutoSize = true;
-            this.lblGenres.Location = new System.Drawing.Point(274, 210);
+            this.lblGenres.Location = new System.Drawing.Point(274, 203);
             this.lblGenres.Name = "lblGenres";
             this.lblGenres.Size = new System.Drawing.Size(41, 13);
             this.lblGenres.TabIndex = 2;
@@ -182,7 +188,7 @@
             this.txtConsole.Location = new System.Drawing.Point(566, 68);
             this.txtConsole.Name = "txtConsole";
             this.txtConsole.ReadOnly = true;
-            this.txtConsole.Size = new System.Drawing.Size(235, 420);
+            this.txtConsole.Size = new System.Drawing.Size(235, 407);
             this.txtConsole.TabIndex = 3;
             this.txtConsole.Text = "|";
             // 
@@ -207,11 +213,40 @@
             this.lblMusicPath.TabIndex = 5;
             this.lblMusicPath.Text = "No folder selected";
             // 
+            // bgWorker
+            // 
+            this.bgWorker.WorkerReportsProgress = true;
+            this.bgWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgWorker_DoWork);
+            this.bgWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bgWorker_ProgressChanged);
+            this.bgWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgWorker_RunWorkerCompleted);
+            // 
+            // statusBar
+            // 
+            this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lblStripStatus,
+            this.progressBar});
+            this.statusBar.Location = new System.Drawing.Point(0, 478);
+            this.statusBar.Name = "statusBar";
+            this.statusBar.Size = new System.Drawing.Size(813, 22);
+            this.statusBar.TabIndex = 7;
+            this.statusBar.Text = "statusStrip1";
+            // 
+            // lblStripStatus
+            // 
+            this.lblStripStatus.Name = "lblStripStatus";
+            this.lblStripStatus.Size = new System.Drawing.Size(0, 17);
+            // 
+            // progressBar
+            // 
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(100, 16);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(813, 500);
+            this.Controls.Add(this.statusBar);
             this.Controls.Add(this.lblMusicPath);
             this.Controls.Add(this.btnSelectMusicFolder);
             this.Controls.Add(this.txtConsole);
@@ -219,9 +254,12 @@
             this.Controls.Add(this.txtSearch);
             this.Controls.Add(this.lblSearch);
             this.Name = "frmMain";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "kyokuFind";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            this.statusBar.ResumeLayout(false);
+            this.statusBar.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -244,6 +282,10 @@
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.Button btnSelectMusicFolder;
         private System.Windows.Forms.Label lblMusicPath;
+        private System.ComponentModel.BackgroundWorker bgWorker;
+        private System.Windows.Forms.StatusStrip statusBar;
+        private System.Windows.Forms.ToolStripStatusLabel lblStripStatus;
+        private System.Windows.Forms.ToolStripProgressBar progressBar;
     }
 }
 

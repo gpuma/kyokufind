@@ -1,3 +1,15 @@
 - clone the repo:
 git clone https://github.com/gpuma/kyokufind
 
+- open kyokuFind.sln on Visual Studio
+- PM>Install-Package Lucene.Net -Version 3.0.3 
+- fill Last.fm credentials and index path location on config.ini file
+- start without debugging
+
+
+libraries:
+- lastfm-sharp: https://code.google.com/archive/p/lastfm-sharp/
+- ultraid3lib, (included in the project, it's dead now)
+
+limitations:
+- only supports mp3 files

@@ -1,18 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using Lucene.Net.Analysis;
-using Lucene.Net.Store;
-using Lucene.Net.Analysis.Standard;
-using HundredMilesSoftware.UltraID3Lib;
 using System.IO;
 using Lastfm.Services;
-using Lastfm.Scrobbling;
 
 namespace kyokuFind
 {
@@ -42,7 +34,7 @@ namespace kyokuFind
         private void SetUp()
         {
             console = new Console(this.txtConsole);
-            lucene = new LuceneService(console);
+            lucene = new LuceneService(console, this.bgWorker);
             session = new Session(CONFIG.LASTFM_API_KEY, CONFIG.LASTFM_API_SECRET);
         }
 
@@ -59,7 +51,7 @@ namespace kyokuFind
             if (keyData == (Keys.Control | Keys.R))
             {
                 console.Log("(Re)building index...");
-                lucene.RebuildIndex();
+                lucene.BuildIndex(Mp3Tags.CollectTags(this.bgWorker));
                 console.Log("Index successfully created");
                 return true;
             }
@@ -83,11 +75,11 @@ namespace kyokuFind
             bool recommendationQuery = false;
             songs = artists = albums = genres = null;
             query = query.Trim();
-            //empty query
+            //empty query will show all documents
+            //todo: check if we should show songs since they're so many
             if (query == "")
             {
-                DisplayResults(songs, artists, albums, genres);
-                return;
+                query = "*:*";
             }
 
             //special query
@@ -230,7 +222,40 @@ namespace kyokuFind
                 return;
             }
             Mp3Tags.musicPath = lblMusicPath.Text = folderBrowserDialog.SelectedPath;
-            lucene.RebuildIndex();
+
+            //another thread will be in charge of building the index since it's the most
+            //expensive operation
+            progressBar.Visible = true;
+            bgWorker.RunWorkerAsync();
+            
+        }
+
+        private void bgWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            progressBar.Value = e.ProgressPercentage;
+            //if null it means we finished
+            if (e.UserState == null)
+                return;
+            var processedItems = (int[])e.UserState;
+            lblStripStatus.Text = String.Format("Processed {0} of {1}.",
+                                                processedItems[0], processedItems[1]);
+        }
+
+        private void bgWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            lucene.BuildIndex(Mp3Tags.CollectTags(this.bgWorker));
+            //we're finished
+            bgWorker.ReportProgress(100);
+        }
+
+        private void bgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            lblStripStatus.Text = "Ready.";
+            txtSearch.Enabled = true;
+            progressBar.Visible = false;
+            //after building the index we want to display all retrieved documents
+            //the empty query is used for that
+            Search("");
         }
     }
 }
